@@ -11,9 +11,11 @@ import javax.persistence.OneToOne;
 public class DetallePedido {
     @Id
     private Integer id;
+    @NotNull
     private Integer cantidad;
+    @NotNull
     private Double precio;
-    @OneToOne(cascade = CascadeType.ALL)
+    @NotNull
     private Producto producto;
 
     public Integer getId() {

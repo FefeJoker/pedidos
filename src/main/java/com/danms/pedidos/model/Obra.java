@@ -2,10 +2,9 @@ package com.danms.pedidos.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
-@Entity
-public class Obra {
-    @Id
+public class Obra implements Serializable {
     private Integer id;
     private String descripcion;
 

@@ -13,7 +13,6 @@ public class Pedido {
     private List<DetallePedido> detalles;
     @ManyToOne(cascade = CascadeType.DETACH)
     private EstadoPedido estadoPedido;
-    @OneToOne(cascade = CascadeType.ALL)
     private Obra obra;
 
     public Integer getId() {
