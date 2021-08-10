@@ -1,5 +1,7 @@
 package com.danms.pedidos.model;
 
+import com.danms.pedidos.converters.ObraConverter;
+
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
@@ -9,10 +11,12 @@ public class Pedido {
     @Id
     private Integer id;
     private Instant fechaPedido;
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "id", cascade = CascadeType.DETACH)
     private List<DetallePedido> detalles;
     @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "estado_pedido_id")
     private EstadoPedido estadoPedido;
+    @Convert(converter = ObraConverter.class)
     private Obra obra;
 
     public Integer getId() {

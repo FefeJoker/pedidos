@@ -9,10 +9,6 @@ public class EstadoPedido {
     private Integer id;
     private String estado;
 
-    public EstadoPedido(){
-        this.estado = "NUEVO";
-    }
-
     public Integer getId() {
         return id;
     }
