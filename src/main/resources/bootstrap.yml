@@ -1,0 +1,38 @@
+spring:  
+  application:
+    name: pedidos-service
+
+  cloud:
+    consul:
+      host: 104.198.16.92
+      port: 8500
+      discovery:
+        instance-id: "pedidos-service"
+        prefer-ip-address: true
+        port: 9003
+
+
+logging:
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+
+server:
+  port: 0
+management:
+  server:
+    port: 9003
+---
+spring:
+  profiles: zone1
+  cloud:
+    consul:
+      discovery:
+        instanceZone: zone1
+
+---
+spring:
+  profiles: zone2
+  cloud:
+    consul:
+      discovery:
+        instanceZone: zone2
