@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('permissions setup'){
             steps{
-                sh 'chmod 777 -R /var/lib/jenkins/workspace/DAN-Lab-Pedidos_develop'
+                sh 'chmod 777 -R /var/lib/jenkins/workspace/Microservicio_de_Pedidos_develop'
             }
         }
         stage('clean') {
@@ -34,7 +34,7 @@ pipeline {
                 sh "docker build -t guillegregoret/pedidos ."
                 sh 'docker ps -f name=pedidos-service -q | xargs --no-run-if-empty docker container stop'
                 sh 'docker container ls -a -fname=pedidos-service -q | xargs -r docker container rm'
-                sh "docker run -d --name pedidos-service -p 9000:9000 guillegregoret/pedidos"
+                sh "docker run -d --name pedidos-service -p 9003:9003 guillegregoret/pedidos"
             }
         }
         /*stage('analisis estatico') {
