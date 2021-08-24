@@ -1,9 +1,6 @@
 package com.danms.pedidos.services;
 
-import com.danms.pedidos.model.DetallePedido;
-import com.danms.pedidos.model.EstadoPedido;
-import com.danms.pedidos.model.Pedido;
-import com.danms.pedidos.model.Producto;
+import com.danms.pedidos.model.*;
 import com.danms.pedidos.repositories.EstadoPedidoRepository;
 import com.danms.pedidos.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +25,25 @@ public class PedidoService {
     @Autowired
     EstadoPedidoRepository estadoPedidoRepository;
 
+    @Autowired
+    DetallePedidoService detallePedidoService;
+
     public Pedido saveNewPedido(Pedido pedido){
-        pedido.setEstadoPedido(estadoPedidoRepository.getOne(1));
+        pedido.setEstadoPedido(estadoPedidoRepository.findById(1).orElse(null));
+        List<DetallePedido> detallesGuardados = new ArrayList<>();
+        for(DetallePedido dp : pedido.getDetalles()){
+            detallesGuardados.add(detallePedidoService.saveDetalle(dp));
+        }
+        pedido.setDetalles(detallesGuardados);
         return pedidoRepository.save(pedido);
     }
 
     public Pedido getOne(Integer idPedido){
         return pedidoRepository.getPedidosById(idPedido).orElse(null);
+    }
+
+    public List<Pedido> getPedidosByObra(Obra obra){
+        return pedidoRepository.getPedidosByObra(obra);
     }
 
     public Pedido actualizarEstado(Pedido pedido, EstadoPedido estadoPedido){
@@ -132,7 +141,7 @@ public class PedidoService {
 
 
         for(DetallePedido dp : listPedidos){
-            String url = "http://localhost:9002/" + "api";
+            String url = "http://backend.fehler.gregoret.com.ar:8085/producto-service" + "api";
             WebClient client = WebClient.create(url);
             ResponseEntity<Boolean> result = client.get()
                     .uri("/producto/{id}/{cantidad}", dp.getId(), dp.getCantidad()).accept(MediaType.APPLICATION_JSON)

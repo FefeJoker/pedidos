@@ -1,6 +1,7 @@
 package com.danms.pedidos.repositories;
 
 import com.danms.pedidos.model.EstadoPedido;
+import com.danms.pedidos.model.Obra;
 import com.danms.pedidos.model.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,5 +12,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
 
     public List<Pedido> getPedidosByEstadoPedido(EstadoPedido estadoPedido);
     public Optional<Pedido> getPedidosById(Integer id);
+    public List<Pedido> getPedidosByObra(Obra obra);
 
 }

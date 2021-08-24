@@ -24,6 +24,10 @@ public class DetallePedidoService {
         return newDetalle;
     }
 
+    public DetallePedido saveDetalle(DetallePedido detallePedido){
+        return detallePedidoRepository.save(detallePedido);
+    }
+
     public void deleteOne(Integer idDetalle){
         detallePedidoRepository.deleteById(idDetalle);
     }

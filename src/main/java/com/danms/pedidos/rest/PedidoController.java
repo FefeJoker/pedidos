@@ -1,5 +1,6 @@
 package com.danms.pedidos.rest;
 
+import com.danms.pedidos.dtos.PedidoDTO;
 import com.danms.pedidos.model.EstadoPedido;
 import com.danms.pedidos.model.Obra;
 import com.danms.pedidos.model.Pedido;
@@ -12,10 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/pedido")
 public class PedidoController {
 
@@ -35,13 +40,12 @@ public class PedidoController {
             return ResponseEntity.badRequest().build();
         }
 
-        String url = "http://localhost:9000/" + "api";
+        String url = "http://backend.fehler.gregoret.com.ar:8085/pedidos-service" + "api";
         WebClient client = WebClient.create(url);
         ResponseEntity<Obra> result = client.get()
                 .uri("/obra/{id}", pedido.getObra().getId()).accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntity(Obra.class)
-                .or(null)
                 .block();
 
         if(result.getStatusCode() != HttpStatus.OK){
@@ -76,10 +80,28 @@ public class PedidoController {
         return ResponseEntity.ok().build();
     }
     @GetMapping(path = "/cliente/{idCliente}")
-    public ResponseEntity<Pedido> getPedidoByCliente(@PathVariable Integer idCliente){
-        //TODO
-        //Interfaceo con los otros microservicios
-        return ResponseEntity.ok().build();
+    public ResponseEntity<List<PedidoDTO>> getPedidoByCliente(@PathVariable Integer idCliente){
+        String url = "http://backend.fehler.gregoret.com.ar:8085/usuarios-service" + "api";
+        WebClient client = WebClient.create(url);
+        ResponseEntity<List<Obra>> result = client.get()
+                .uri("/obra?idCliente={idCliente}", idCliente).accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .toEntityList(Obra.class)
+                .block();
+        if(result.getStatusCode() != HttpStatus.OK){
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Obra> obras = result.getBody();
+        List<PedidoDTO> listaPedidos = new ArrayList<>();
+
+        obras.stream()
+                .forEach((o) -> listaPedidos.addAll(pedidoService.getPedidosByObra(o).stream()
+                        .map(PedidoDTO::new)
+                        .collect(Collectors.toList())));
+
+
+        return ResponseEntity.ok(listaPedidos);
     }
 
 

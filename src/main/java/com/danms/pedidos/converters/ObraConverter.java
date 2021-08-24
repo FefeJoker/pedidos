@@ -16,13 +16,12 @@ public class ObraConverter implements AttributeConverter<Obra, Integer> {
 
     @Override
     public Obra convertToEntityAttribute(Integer idObra) {
-        String url = "http://localhost:9000/" + "api";
+        String url = "http://backend.fehler.gregoret.com.ar:8085/usuarios-service" + "api";
         WebClient client = WebClient.create(url);
         ResponseEntity<Obra> result = client.get()
                 .uri("/obra/{id}", idObra).accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntity(Obra.class)
-                .or(null)
                 .block();
 
         return result.getBody();

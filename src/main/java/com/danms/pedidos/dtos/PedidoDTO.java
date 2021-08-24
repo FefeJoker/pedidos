@@ -1,24 +1,23 @@
-package com.danms.pedidos.model;
+package com.danms.pedidos.dtos;
 
-import com.danms.pedidos.converters.ObraConverter;
+import com.danms.pedidos.model.EstadoPedido;
+import com.danms.pedidos.model.Obra;
+import com.danms.pedidos.model.Pedido;
 
-import javax.persistence.*;
 import java.time.Instant;
-import java.util.List;
 
-@Entity
-public class Pedido {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class PedidoDTO {
     private Integer id;
     private Instant fechaPedido;
-    @OneToMany()
-    private List<DetallePedido> detalles;
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "estado_pedido_id")
     private EstadoPedido estadoPedido;
-    @Convert(converter = ObraConverter.class)
     private Obra obra;
+
+    public PedidoDTO(Pedido pedido){
+        this.id = pedido.getId();
+        this.fechaPedido = pedido.getFechaPedido();
+        this.estadoPedido = pedido.getEstadoPedido();
+        this.obra = pedido.getObra();
+    }
 
     public Integer getId() {
         return id;
@@ -34,14 +33,6 @@ public class Pedido {
 
     public void setFechaPedido(Instant fechaPedido) {
         this.fechaPedido = fechaPedido;
-    }
-
-    public List<DetallePedido> getDetalles() {
-        return detalles;
-    }
-
-    public void setDetalles(List<DetallePedido> detalles) {
-        this.detalles = detalles;
     }
 
     public EstadoPedido getEstadoPedido() {

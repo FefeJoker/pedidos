@@ -1,21 +1,22 @@
 package com.danms.pedidos.model;
 
+import com.danms.pedidos.converters.ObraConverter;
+import com.danms.pedidos.converters.ProductoConverter;
 import com.sun.istack.NotNull;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 public class DetallePedido {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @NotNull
     private Integer cantidad;
     @NotNull
     private Double precio;
     @NotNull
+    @Convert(converter = ProductoConverter.class)
     private Producto producto;
 
     public Integer getId() {

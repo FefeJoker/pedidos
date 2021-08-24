@@ -17,13 +17,12 @@ public class ProductoConverter implements AttributeConverter<Producto, Integer> 
 
     @Override
     public Producto convertToEntityAttribute(Integer idProducto) {
-        String url = "http://localhost:9002/" + "api";
+        String url = "http://http://backend.fehler.gregoret.com.ar:8085/producto-service" + "api";
         WebClient client = WebClient.create(url);
         ResponseEntity<Producto> result = client.get()
                 .uri("/producto/{id}", idProducto).accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntity(Producto.class)
-                .or(null)
                 .block();
 
         return result.getBody();
