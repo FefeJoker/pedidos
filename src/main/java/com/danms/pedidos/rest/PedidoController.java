@@ -1,9 +1,7 @@
 package com.danms.pedidos.rest;
 
 import com.danms.pedidos.dtos.PedidoDTO;
-import com.danms.pedidos.model.EstadoPedido;
-import com.danms.pedidos.model.Obra;
-import com.danms.pedidos.model.Pedido;
+import com.danms.pedidos.model.*;
 import com.danms.pedidos.repositories.EstadoPedidoRepository;
 import com.danms.pedidos.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,27 +30,38 @@ public class PedidoController {
 
     @PostMapping
     public ResponseEntity<Pedido> crear(@RequestBody Pedido pedido){
+        try{
+            if(pedido.getObra() == null
+                    || pedido.getDetalles().isEmpty()
+                    || pedido.getDetalles().get(0).getCantidad() == null
+                    || pedido.getDetalles().get(0).getProducto() == null){
+                return ResponseEntity.badRequest().build();
+            }
 
-        if(pedido.getObra() == null
-                || pedido.getDetalles().isEmpty()
-                || pedido.getDetalles().get(0).getCantidad() == null
-                || pedido.getDetalles().get(0).getProducto() == null){
-            return ResponseEntity.badRequest().build();
+            String url = "http://backend.fehler.gregoret.com.ar:8085/usuarios-service/" + "api";
+            WebClient client = WebClient.create(url);
+            ResponseEntity<Obra> result = client.get()
+                    .uri("/obra/{id}", pedido.getObra().getId()).accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .toEntity(Obra.class)
+                    .block();
+
+            if(result.getStatusCode() != HttpStatus.OK){
+                return ResponseEntity.notFound().build();
+            }
+
+            return  ResponseEntity.ok(pedidoService.saveNewPedido(pedido));
+        }catch (Exception e){
+            Pedido p = new Pedido();
+            DetallePedido d = new DetallePedido();
+            Producto pro = new Producto();
+            List<DetallePedido> ldp = new ArrayList<>();
+            pro.setDescripcion(e.getMessage());
+            d.setProducto(pro);
+            ldp.add(d);
+            p.setDetalles(ldp);
+            return ResponseEntity.ok(p);
         }
-
-        String url = "http://backend.fehler.gregoret.com.ar:8085/usuarios-service/" + "api";
-        WebClient client = WebClient.create(url);
-        ResponseEntity<Obra> result = client.get()
-                .uri("/obra/{id}", pedido.getObra().getId()).accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .toEntity(Obra.class)
-                .block();
-
-        if(result.getStatusCode() != HttpStatus.OK){
-            return ResponseEntity.notFound().build();
-        }
-
-        return  ResponseEntity.ok(pedidoService.saveNewPedido(pedido));
     }
 
     @PatchMapping(path = "/{id}/{nuevoEstado}")
