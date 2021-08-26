@@ -40,7 +40,7 @@ public class PedidoController {
             return ResponseEntity.badRequest().build();
         }
 
-        String url = "http://backend.fehler.gregoret.com.ar:8085/pedidos-service" + "api";
+        String url = "http://backend.fehler.gregoret.com.ar:8085/usuarios-service" + "api";
         WebClient client = WebClient.create(url);
         ResponseEntity<Obra> result = client.get()
                 .uri("/obra/{id}", pedido.getObra().getId()).accept(MediaType.APPLICATION_JSON)
