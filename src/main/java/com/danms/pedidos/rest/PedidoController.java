@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -52,11 +54,14 @@ public class PedidoController {
 
             return  ResponseEntity.ok(pedidoService.saveNewPedido(pedido));
         }catch (Exception e){
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
             Pedido p = new Pedido();
             DetallePedido d = new DetallePedido();
             Producto pro = new Producto();
             List<DetallePedido> ldp = new ArrayList<>();
-            pro.setDescripcion(e.getMessage());
+            pro.setDescripcion(sw.toString());
             d.setProducto(pro);
             ldp.add(d);
             p.setDetalles(ldp);
