@@ -32,6 +32,7 @@ public class PedidoService {
         pedido.setEstadoPedido(estadoPedidoRepository.findById(1).orElse(null));
         List<DetallePedido> detallesGuardados = new ArrayList<>();
         for(DetallePedido dp : pedido.getDetalles()){
+            dp.setId(null);
             detallesGuardados.add(detallePedidoService.saveDetalle(dp));
         }
         pedido.setDetalles(detallesGuardados);
