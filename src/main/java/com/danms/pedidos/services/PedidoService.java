@@ -141,7 +141,7 @@ public class PedidoService {
 
 
         for(DetallePedido dp : listPedidos){
-            String url = "http://backend.fehler.gregoret.com.ar:8085/producto-service" + "api";
+            String url = "http://backend.fehler.gregoret.com.ar:8085/producto-service/" + "api";
             WebClient client = WebClient.create(url);
             ResponseEntity<Boolean> result = client.get()
                     .uri("/producto/{id}/{cantidad}", dp.getId(), dp.getCantidad()).accept(MediaType.APPLICATION_JSON)

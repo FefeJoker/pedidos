@@ -40,7 +40,7 @@ public class PedidoController {
             return ResponseEntity.badRequest().build();
         }
 
-        String url = "http://backend.fehler.gregoret.com.ar:8085/usuarios-service" + "api";
+        String url = "http://backend.fehler.gregoret.com.ar:8085/usuarios-service/" + "api";
         WebClient client = WebClient.create(url);
         ResponseEntity<Obra> result = client.get()
                 .uri("/obra/{id}", pedido.getObra().getId()).accept(MediaType.APPLICATION_JSON)
@@ -81,7 +81,7 @@ public class PedidoController {
     }
     @GetMapping(path = "/cliente/{idCliente}")
     public ResponseEntity<List<PedidoDTO>> getPedidoByCliente(@PathVariable Integer idCliente){
-        String url = "http://backend.fehler.gregoret.com.ar:8085/usuarios-service" + "api";
+        String url = "http://backend.fehler.gregoret.com.ar:8085/usuarios-service/" + "api";
         WebClient client = WebClient.create(url);
         ResponseEntity<List<Obra>> result = client.get()
                 .uri("/obra?idCliente={idCliente}", idCliente).accept(MediaType.APPLICATION_JSON)

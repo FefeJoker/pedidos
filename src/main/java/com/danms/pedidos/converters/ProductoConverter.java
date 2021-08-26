@@ -17,7 +17,7 @@ public class ProductoConverter implements AttributeConverter<Producto, Integer> 
 
     @Override
     public Producto convertToEntityAttribute(Integer idProducto) {
-        String url = "http://http://backend.fehler.gregoret.com.ar:8085/producto-service" + "api";
+        String url = "http://http://backend.fehler.gregoret.com.ar:8085/producto-service/" + "api";
         WebClient client = WebClient.create(url);
         ResponseEntity<Producto> result = client.get()
                 .uri("/producto/{id}", idProducto).accept(MediaType.APPLICATION_JSON)
